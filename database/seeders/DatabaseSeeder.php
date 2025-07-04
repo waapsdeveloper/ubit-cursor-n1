@@ -46,5 +46,8 @@ class DatabaseSeeder extends Seeder
                 'invited_by' => $admins->random()->id,
             ]);
         }
+
+        // Seed the super admin
+        $this->call(SuperAdminSeeder::class);
     }
 }
