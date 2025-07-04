@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,53 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is a bidder.
+     */
+    public function isBidder(): bool
+    {
+        return $this->role === 'bidder';
+    }
+
+    /**
+     * Get the auctions created by the user (admin).
+     */
+    public function auctions()
+    {
+        return $this->hasMany(Auction::class, 'created_by');
+    }
+
+    /**
+     * Get the bids placed by the user.
+     */
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+
+    /**
+     * Get the wallet for the user.
+     */
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Get the invites sent by the user (admin).
+     */
+    public function invites()
+    {
+        return $this->hasMany(Invite::class, 'invited_by');
     }
 }
