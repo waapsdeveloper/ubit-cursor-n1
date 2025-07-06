@@ -23,6 +23,11 @@ export default {
                 'ubit-yellow': {
                     300: '#FDE047',
                     400: '#FACC15',
+                },
+                'ubit-orange': {
+                    500: '#FFA035',
+                    600: '#FF8C1A',
+                    700: '#FF7800',
                 }
             },
         },
