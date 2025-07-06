@@ -8,6 +8,7 @@ use App\Http\Controllers\AuctionDetailController;
 Route::get('/', [AuctionController::class, 'index'])->name('landing');
 Route::get('/auctions', [AuctionController::class, 'list'])->name('auctions.list');
 Route::get('/auction/{id}', [AuctionDetailController::class, 'show'])->name('auction.detail');
+Route::get('/auction/{id}/bid', [AuctionController::class, 'showBidForm'])->name('auction.bid');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

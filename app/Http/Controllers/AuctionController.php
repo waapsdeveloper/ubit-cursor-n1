@@ -61,4 +61,50 @@ class AuctionController extends Controller
 
         return view('auctions.list', compact('auctions'));
     }
+
+    public function showBidForm($id)
+    {
+        $auction = Auction::with(['timerSettings', 'bids.user'])->findOrFail($id);
+        
+        // Check if auction is still active
+        if ($auction->status !== 'active') {
+            return redirect()->route('auction.detail', $id)
+                ->with('error', 'This auction is no longer active.');
+        }
+
+        // Check if auction has ended
+        if (now()->gt($auction->end_time)) {
+            return redirect()->route('auction.detail', $id)
+                ->with('error', 'This auction has ended.');
+        }
+
+        // Get current highest bid
+        $currentBid = $auction->bids()->orderBy('amount', 'desc')->first();
+        $currentAmount = $currentBid ? $currentBid->amount : $auction->starting_bid;
+        
+        // Calculate minimum next bid
+        $minNextBid = $currentAmount + $auction->bid_increment;
+        
+        // Get recent bid history (last 10 bids)
+        $recentBids = $auction->bids()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get()
+            ->reverse();
+
+        // Check if user is authenticated
+        $user = auth()->user();
+        $canBid = $user && $user->id !== $auction->created_by; // Can't bid on your own auction
+
+        return view('auctions.bid', compact(
+            'auction', 
+            'currentBid', 
+            'currentAmount', 
+            'minNextBid', 
+            'recentBids', 
+            'canBid',
+            'user'
+        ));
+    }
 }

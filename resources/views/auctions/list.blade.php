@@ -180,7 +180,7 @@
                                         View Details
                                     </a>
                                     <a 
-                                        href="{{ route('auction.detail', $auction->id) }}" 
+                                        href="{{ route('auction.bid', $auction->id) }}" 
                                         class="flex-1 border border-ubit-orange-500 text-ubit-orange-500 px-3 py-2 rounded-lg font-semibold text-center hover:bg-ubit-orange-500 hover:text-white transition-colors text-sm"
                                     >
                                         Place Bid

@@ -80,7 +80,7 @@
                         <!-- Action Buttons -->
                         <div class="flex space-x-3">
                             <a 
-                                href="#" 
+                                href="{{ route('auction.bid', $property->id) }}" 
                                 class="flex-1 bg-ubit-orange-500 text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-ubit-orange-600 transition-colors"
                             >
                                 Place Bid

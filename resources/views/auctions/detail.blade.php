@@ -215,12 +215,9 @@
 
                         <!-- Bidding Section -->
                         <div class="space-y-4">
-                            <div class="flex space-x-2">
-                                <input type="number" placeholder="Enter bid amount" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ubit-purple-500">
-                                <button class="bg-ubit-orange-500 text-white px-6 py-2 rounded-md hover:bg-ubit-orange-600 transition-colors">
-                                    Bid
-                                </button>
-                            </div>
+                            <a href="{{ route('auction.bid', $auction->id) }}" class="w-full bg-ubit-orange-500 text-white py-3 rounded-md hover:bg-ubit-orange-600 transition-colors font-semibold text-center block">
+                                Place Bid
+                            </a>
                             <button class="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors font-semibold">
                                 Buy now for PKR {{ number_format($auction->starting_bid * 1.5, 0) }}
                             </button>
