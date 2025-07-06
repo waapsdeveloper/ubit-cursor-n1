@@ -3,8 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\AuctionDetailController;
 
 Route::get('/', [AuctionController::class, 'index'])->name('landing');
+Route::get('/auction/{id}', [AuctionDetailController::class, 'show'])->name('auction.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

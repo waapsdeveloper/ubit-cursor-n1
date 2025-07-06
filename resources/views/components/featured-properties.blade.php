@@ -86,7 +86,7 @@
                                 Place Bid
                             </a>
                             <a 
-                                href="#" 
+                                href="{{ route('auction.detail', $property->id) }}" 
                                 class="flex-1 border border-ubit-purple-500 text-ubit-purple-500 px-4 py-2 rounded-lg font-semibold text-center hover:bg-ubit-purple-500 hover:text-white transition-colors"
                             >
                                 View Details
