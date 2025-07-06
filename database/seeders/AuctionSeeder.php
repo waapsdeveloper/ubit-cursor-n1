@@ -124,6 +124,29 @@ class AuctionSeeder extends Seeder
                 'end_time' => now()->addDays(16),
                 'status' => 'active',
             ],
+            // Add some auctions ending soon for timer testing
+            [
+                'title' => 'Quick Sale Apartment',
+                'image' => 'images/demo/properties/pr-1.png',
+                'location' => 'Sahil e Firdaus - Quick Sale',
+                'starting_bid' => 12000000,
+                'deposit' => 500000,
+                'bid_increment' => 100000,
+                'start_time' => now()->subDays(2),
+                'end_time' => now()->addHours(2), // Ends in 2 hours
+                'status' => 'active',
+            ],
+            [
+                'title' => 'Last Minute Villa',
+                'image' => 'images/demo/properties/pr-2.png',
+                'location' => 'Sahil e Firdaus - Last Minute',
+                'starting_bid' => 20000000,
+                'deposit' => 800000,
+                'bid_increment' => 150000,
+                'start_time' => now()->subDays(1),
+                'end_time' => now()->addMinutes(30), // Ends in 30 minutes
+                'status' => 'active',
+            ],
         ];
 
         // Create auctions

@@ -28,7 +28,7 @@
     <!-- Timer Display -->
     <div x-show="!isExpired" class="timer-display">
         <!-- Compact Style -->
-        <div x-show="config.style === 'compact'" class="timer-compact">
+        <div x-show="config.style === 'compact'" class="timer-compact" :class="'timer-compact-' + config.color">
             <div class="flex items-center justify-center space-x-1">
                 <template x-if="config.showDays && timeRemaining.days > 0">
                     <div class="flex items-center">
@@ -129,19 +129,19 @@
 }
 
 /* Color variants */
-.timer-compact.orange {
+.timer-compact-orange {
     @apply bg-orange-100 text-orange-800;
 }
 
-.timer-compact.red {
+.timer-compact-red {
     @apply bg-red-100 text-red-800;
 }
 
-.timer-compact.green {
+.timer-compact-green {
     @apply bg-green-100 text-green-800;
 }
 
-.timer-compact.purple {
+.timer-compact-purple {
     @apply bg-purple-100 text-purple-800;
 }
 </style>

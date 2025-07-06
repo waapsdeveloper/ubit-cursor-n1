@@ -6,3 +6,4 @@
 <x-backpack::menu-item title="Bids" icon="la la-question" :link="backpack_url('bid')" />
 <x-backpack::menu-item title="Wallets" icon="la la-question" :link="backpack_url('wallet')" />
 <x-backpack::menu-item title="Invites" icon="la la-question" :link="backpack_url('invite')" />
+<x-backpack::menu-item title="Auctiontimersettings" icon="la la-question" :link="backpack_url('auctiontimersetting')" />
