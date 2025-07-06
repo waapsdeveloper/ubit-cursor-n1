@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuctionController;
 
-Route::get('/', [AuctionController::class, 'index']);
+Route::get('/', [AuctionController::class, 'index'])->name('landing');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
