@@ -89,6 +89,7 @@ class SettingsController extends Controller
      */
     public function statistics()
     {
+        // Basic counts
         $stats = [
             'total_users' => \App\Models\User::count(),
             'total_bidders' => \App\Models\User::where('role', 'bidder')->count(),
@@ -100,6 +101,96 @@ class SettingsController extends Controller
             'total_revenue' => \App\Models\BidderApplication::where('status', 'approved')->sum('deposit_amount'),
         ];
 
-        return view('admin.settings.statistics', compact('stats'));
+        // Application status breakdown
+        $applicationStats = [
+            'pending' => \App\Models\BidderApplication::where('status', 'pending')->count(),
+            'payment_verified' => \App\Models\BidderApplication::where('status', 'payment_verified')->count(),
+            'invitation_sent' => \App\Models\BidderApplication::where('status', 'invitation_sent')->count(),
+            'approved' => \App\Models\BidderApplication::where('status', 'approved')->count(),
+            'rejected' => \App\Models\BidderApplication::where('status', 'rejected')->count(),
+        ];
+
+        // Recent activity (last 7 days)
+        $recentActivity = [
+            'new_applications' => \App\Models\BidderApplication::where('created_at', '>=', now()->subDays(7))->count(),
+            'verified_payments' => \App\Models\BidderApplication::where('payment_verified_at', '>=', now()->subDays(7))->count(),
+            'sent_invitations' => \App\Models\BidderApplication::where('invitation_sent_at', '>=', now()->subDays(7))->count(),
+            'approved_applications' => \App\Models\BidderApplication::where('approved_at', '>=', now()->subDays(7))->count(),
+            'new_bidders' => \App\Models\User::where('role', 'bidder')->where('updated_at', '>=', now()->subDays(7))->count(),
+            'new_auctions' => \App\Models\Auction::where('created_at', '>=', now()->subDays(7))->count(),
+            'new_bids' => \App\Models\Bid::where('created_at', '>=', now()->subDays(7))->count(),
+        ];
+
+        // Monthly trends (last 6 months)
+        $monthlyTrends = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+            $monthlyTrends[] = [
+                'month' => $month->format('M Y'),
+                'applications' => \App\Models\BidderApplication::whereYear('created_at', $month->year)
+                    ->whereMonth('created_at', $month->month)->count(),
+                'approved' => \App\Models\BidderApplication::whereYear('approved_at', $month->year)
+                    ->whereMonth('approved_at', $month->month)->count(),
+                'revenue' => \App\Models\BidderApplication::whereYear('approved_at', $month->year)
+                    ->whereMonth('approved_at', $month->month)->sum('deposit_amount'),
+            ];
+        }
+
+        // Pending actions for admin
+        $pendingActions = [
+            'applications_to_verify' => \App\Models\BidderApplication::where('status', 'pending')->count(),
+            'applications_to_invite' => \App\Models\BidderApplication::where('status', 'payment_verified')->count(),
+            'applications_to_approve' => \App\Models\BidderApplication::where('status', 'invitation_sent')->count(),
+        ];
+
+        // System health metrics
+        $systemHealth = [
+            'avg_application_processing_time' => $this->calculateAverageProcessingTime(),
+            'conversion_rate' => $this->calculateConversionRate(),
+            'revenue_per_application' => $stats['total_applications'] > 0 ? $stats['total_revenue'] / $stats['total_applications'] : 0,
+        ];
+
+        return view('admin.settings.statistics', compact(
+            'stats', 
+            'applicationStats', 
+            'recentActivity', 
+            'monthlyTrends', 
+            'pendingActions',
+            'systemHealth'
+        ));
+    }
+
+    /**
+     * Calculate average processing time for applications.
+     */
+    private function calculateAverageProcessingTime()
+    {
+        $approvedApplications = \App\Models\BidderApplication::whereNotNull('approved_at')->get();
+        
+        if ($approvedApplications->isEmpty()) {
+            return 0;
+        }
+
+        $totalDays = 0;
+        foreach ($approvedApplications as $application) {
+            $totalDays += $application->created_at->diffInDays($application->approved_at);
+        }
+
+        return round($totalDays / $approvedApplications->count(), 1);
+    }
+
+    /**
+     * Calculate conversion rate (applications to approved).
+     */
+    private function calculateConversionRate()
+    {
+        $totalApplications = \App\Models\BidderApplication::count();
+        $approvedApplications = \App\Models\BidderApplication::where('status', 'approved')->count();
+        
+        if ($totalApplications === 0) {
+            return 0;
+        }
+
+        return round(($approvedApplications / $totalApplications) * 100, 1);
     }
 } 

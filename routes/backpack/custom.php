@@ -30,6 +30,9 @@ Route::group([
     Route::get('bidder-application/{id}/approve', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'approve'])->name('backpack.bidder-application.approve');
     Route::get('bidder-application/{id}/reject', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'reject'])->name('backpack.bidder-application.reject');
 
+    // Override default dashboard with statistics
+    Route::get('dashboard', [\App\Http\Controllers\Admin\SettingsController::class, 'statistics'])->name('backpack.dashboard');
+
     // Settings routes
     Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
