@@ -112,7 +112,7 @@
         @if($showViewAll && $properties->count() > 0)
             <div class="text-center mt-12">
                 <a 
-                    href="#" 
+                    href="{{ route('auctions.list') }}" 
                     class="inline-flex items-center bg-ubit-purple-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-ubit-purple-600 transition-colors"
                 >
                     View All Properties
