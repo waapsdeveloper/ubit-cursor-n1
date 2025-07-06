@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Auction;
+use App\Models\Bid; // Added this import for the new method
 
 class AuctionController extends Controller
 {
@@ -106,5 +107,74 @@ class AuctionController extends Controller
             'canBid',
             'user'
         ));
+    }
+
+    public function submitBid(Request $request, $id)
+    {
+        $auction = Auction::findOrFail($id);
+        $user = auth()->user();
+
+        // Validation checks
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+        }
+
+        if ($user->id === $auction->created_by) {
+            return redirect()->route('auction.bid', $id)
+                ->with('error', 'You cannot bid on your own auction.');
+        }
+
+        if ($auction->status !== 'active') {
+            return redirect()->route('auction.detail', $id)
+                ->with('error', 'This auction is no longer active.');
+        }
+
+        if (now()->gt($auction->end_time)) {
+            return redirect()->route('auction.detail', $id)
+                ->with('error', 'This auction has ended.');
+        }
+
+        // Get current highest bid
+        $currentBid = $auction->bids()->orderBy('amount', 'desc')->first();
+        $currentAmount = $currentBid ? $currentBid->amount : $auction->starting_bid;
+        $minNextBid = $currentAmount + $auction->bid_increment;
+
+        // Validate bid amount
+        $request->validate([
+            'amount' => [
+                'required',
+                'numeric',
+                'min:' . $minNextBid,
+                'max:999999999'
+            ],
+            'agree_terms' => 'required|accepted'
+        ], [
+            'amount.min' => 'Your bid must be at least PKR ' . number_format($minNextBid, 0) . '.',
+            'amount.max' => 'Bid amount is too high.',
+            'agree_terms.required' => 'You must agree to the terms and conditions.'
+        ]);
+
+        // Check if user already has the highest bid
+        if ($currentBid && $currentBid->user_id === $user->id) {
+            return redirect()->route('auction.bid', $id)
+                ->with('error', 'You already have the highest bid on this auction.');
+        }
+
+        try {
+            // Create the bid
+            $bid = Bid::create([
+                'user_id' => $user->id,
+                'auction_id' => $auction->id,
+                'amount' => $request->amount
+            ]);
+
+            // Redirect with success message
+            return redirect()->route('auction.detail', $id)
+                ->with('success', 'Your bid of PKR ' . number_format($request->amount, 0) . ' has been placed successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('auction.bid', $id)
+                ->with('error', 'There was an error placing your bid. Please try again.');
+        }
     }
 }

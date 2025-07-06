@@ -206,7 +206,7 @@
                                 </div>
                             @else
                                 <!-- Bidding Form -->
-                                <form method="POST" action="{{ route('auction.bid', $auction->id) }}" class="space-y-6">
+                                <form method="POST" action="{{ route('auction.bid.submit', $auction->id) }}" class="space-y-6">
                                     @csrf
                                     
                                     <!-- Current Bid Display -->

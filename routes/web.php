@@ -9,10 +9,10 @@ Route::get('/', [AuctionController::class, 'index'])->name('landing');
 Route::get('/auctions', [AuctionController::class, 'list'])->name('auctions.list');
 Route::get('/auction/{id}', [AuctionDetailController::class, 'show'])->name('auction.detail');
 Route::get('/auction/{id}/bid', [AuctionController::class, 'showBidForm'])->name('auction.bid');
+Route::post('/auction/{id}/bid', [AuctionController::class, 'submitBid'])->name('auction.bid.submit');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
