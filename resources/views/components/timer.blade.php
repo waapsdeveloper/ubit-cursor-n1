@@ -19,13 +19,15 @@
     id="{{ $timerId }}"
     class="auction-timer"
     title="Timer for {{ $auction->title }}"
-    style="border: 2px solid red; min-height: 30px;"
+
     data-end-time="{{ $auction->end_time }}"
 >
-    <!-- Static Timer Display -->
-    <div class="timer-compact timer-compact-orange">
-        <div class="flex items-center justify-center space-x-1 text-sm font-bold">
-            <span id="timer-{{ $auction->id }}">{{ $timeRemaining['days'] }}d {{ $timeRemaining['hours'] }}h {{ $timeRemaining['minutes'] }}m {{ $timeRemaining['seconds'] }}s</span>
+    <!-- Digital Timer Display -->
+    <div class="timer-digital">
+        <div class="flex items-center justify-center">
+            <span id="timer-{{ $auction->id }}" class="bg-white px-3 py-1 rounded-md shadow-sm border border-gray-200 text-base font-mono font-bold text-gray-800">
+                {{ $timeRemaining['days'] }} : {{ $timeRemaining['hours'] }} : {{ $timeRemaining['minutes'] }} : {{ $timeRemaining['seconds'] }}
+            </span>
         </div>
     </div>
 </div>
@@ -50,10 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         
         let timeString = '';
-        if (days > 0) timeString += days + 'd ';
-        timeString += String(hours).padStart(2, '0') + 'h ';
-        timeString += String(minutes).padStart(2, '0') + 'm ';
-        timeString += String(seconds).padStart(2, '0') + 's';
+        if (days > 0) {
+            timeString += String(days).padStart(2, '0') + ' : ';
+        }
+        timeString += String(hours).padStart(2, '0') + ' : ';
+        timeString += String(minutes).padStart(2, '0') + ' : ';
+        timeString += String(seconds).padStart(2, '0');
         
         timerElement.textContent = timeString;
     }
@@ -66,48 +70,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
-
-
-</div>
-
 <style>
 .auction-timer {
     font-family: 'Inter', sans-serif;
-    min-width: 80px;
     display: inline-block;
 }
 
-.timer-compact {
-    @apply bg-white px-3 py-2 rounded-lg shadow-lg min-w-max border border-gray-200;
+.timer-digital {
+    @apply w-full;
 }
 
-.timer-detailed {
-    @apply bg-white border border-gray-200 px-4 py-2 rounded-lg;
-}
-
-.timer-minimal {
-    @apply text-gray-700;
-}
-
-.timer-expired {
-    @apply text-center;
-}
-
-/* Color variants */
-.timer-compact-orange {
-    @apply bg-orange-100 text-orange-800;
-}
-
-.timer-compact-red {
-    @apply bg-red-100 text-red-800;
-}
-
-.timer-compact-green {
-    @apply bg-green-100 text-green-800;
-}
-
-.timer-compact-purple {
-    @apply bg-purple-100 text-purple-800;
+.timer-digital span {
+    @apply font-mono;
+    font-variant-numeric: tabular-nums;
 }
 </style>
