@@ -271,7 +271,7 @@
                                                 onclick="setBidAmount({{ $minNextBid + $auction->bid_increment }})"
                                                 class="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50 transition-colors"
                                             >
-                                                +{{ number_format($auction->bid_increment, 0) }}
+                                                Add {{ number_format($auction->bid_increment, 0) }}
                                             </button>
                                         </div>
                                     </div>

@@ -46,7 +46,10 @@ class BidderApplicationCrudController extends CrudController
         CRUD::column('id');
         CRUD::column('user.name')->label('Applicant');
         CRUD::column('phone');
+        CRUD::column('cnic')->label('CNIC');
         CRUD::column('deposit_amount')->type('number')->decimals(2)->prefix('PKR ');
+        CRUD::column('bank_name');
+        CRUD::column('transaction_id')->label('Transaction ID');
         CRUD::column('status')->type('badge')->options([
             'pending' => 'warning',
             'payment_verified' => 'info',
@@ -54,12 +57,18 @@ class BidderApplicationCrudController extends CrudController
             'approved' => 'success',
             'rejected' => 'danger',
         ]);
-        CRUD::column('created_at')->type('datetime');
+        CRUD::column('created_at')->type('datetime')->label('Applied On');
+        CRUD::column('payment_verified_at')->type('datetime')->label('Payment Verified');
+        CRUD::column('invitation_sent_at')->type('datetime')->label('Invitation Sent');
+        CRUD::column('approved_at')->type('datetime')->label('Approved On');
 
-        // Add custom actions
-        CRUD::addButton('line', 'verify_payment', 'view', 'bidder-application.verify-payment', 'beginning');
-        CRUD::addButton('line', 'send_invitation', 'view', 'bidder-application.send-invitation', 'beginning');
-        CRUD::addButton('line', 'approve', 'view', 'bidder-application.approve', 'beginning');
+        // Disable default CRUD buttons since they're included in our dropdown
+        CRUD::removeButton('show');
+        CRUD::removeButton('update');
+        CRUD::removeButton('delete');
+        
+        // Add actions dropdown (includes preview, edit, delete)
+        CRUD::addButton('line', 'actions', 'model_function', 'actionsDropdown', 'beginning');
     }
 
     /**
@@ -99,6 +108,39 @@ class BidderApplicationCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Show operation is loaded.
+     * 
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('id');
+        CRUD::column('user.name')->label('Applicant Name');
+        CRUD::column('user.email')->label('Email');
+        CRUD::column('phone');
+        CRUD::column('cnic')->label('CNIC');
+        CRUD::column('deposit_amount')->type('number')->decimals(2)->prefix('PKR ');
+        CRUD::column('bank_name');
+        CRUD::column('account_number')->label('Account Number');
+        CRUD::column('transaction_id')->label('Transaction ID');
+        CRUD::column('payment_proof')->type('image')->disk('public')->label('Payment Proof');
+        CRUD::column('status')->type('badge')->options([
+            'pending' => 'warning',
+            'payment_verified' => 'info',
+            'invitation_sent' => 'primary',
+            'approved' => 'success',
+            'rejected' => 'danger',
+        ]);
+        CRUD::column('admin_notes')->type('textarea');
+        CRUD::column('created_at')->type('datetime')->label('Application Submitted');
+        CRUD::column('payment_verified_at')->type('datetime')->label('Payment Verified On');
+        CRUD::column('invitation_sent_at')->type('datetime')->label('Invitation Sent On');
+        CRUD::column('approved_at')->type('datetime')->label('Approved On');
+        CRUD::column('verifiedBy.name')->label('Verified By');
     }
 
     /**
@@ -178,6 +220,28 @@ class BidderApplicationCrudController extends CrudController
             \Alert::success('Application approved! User is now a bidder.')->flash();
         } else {
             \Alert::error('Application must have invitation sent first.')->flash();
+        }
+        
+        return redirect()->back();
+    }
+
+    /**
+     * Reject a bidder application.
+     */
+    public function reject($id)
+    {
+        $application = BidderApplication::findOrFail($id);
+        
+        if (in_array($application->status, ['pending', 'payment_verified'])) {
+            // Mark application as rejected
+            $application->update([
+                'status' => 'rejected',
+                'admin_notes' => $application->admin_notes ? $application->admin_notes . "\n\nApplication rejected on " . now()->format('M d, Y g:i A') : 'Application rejected on ' . now()->format('M d, Y g:i A')
+            ]);
+            
+            \Alert::success('Application rejected successfully.')->flash();
+        } else {
+            \Alert::error('Cannot reject application in current status.')->flash();
         }
         
         return redirect()->back();

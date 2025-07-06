@@ -81,6 +81,28 @@
             <div class="bg-white rounded-xl shadow-lg p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Application Form</h2>
                 
+                @if(session('error'))
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <p class="text-red-800">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-green-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <p class="text-green-800">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                @endif
+                
                 <form method="POST" action="{{ route('bidder.application.submit') }}" enctype="multipart/form-data">
                     @csrf
                     
@@ -97,9 +119,11 @@
                                     name="phone" 
                                     value="{{ old('phone') }}"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ubit-purple-500"
-                                    placeholder="+92 300 1234567"
+                                    placeholder="+923001234567"
+                                    pattern="^\+92\d{10}$"
                                     required
                                 >
+                                <p class="text-xs text-gray-500 mt-1">Format: +923001234567 (Pakistan mobile number without spaces)</p>
                                 @error('phone')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -114,8 +138,10 @@
                                     value="{{ old('cnic') }}"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ubit-purple-500"
                                     placeholder="12345-1234567-1"
+                                    pattern="^\d{5}-\d{7}-\d{1}$"
                                     required
                                 >
+                                <p class="text-xs text-gray-500 mt-1">Format: 12345-1234567-1 (13 digits with hyphens)</p>
                                 @error('cnic')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -137,6 +163,7 @@
                                     placeholder="e.g., HBL, UBL, MCB"
                                     required
                                 >
+                                <p class="text-xs text-gray-500 mt-1">Enter your bank's full name (e.g., Habib Bank Limited, United Bank Limited)</p>
                                 @error('bank_name')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -151,8 +178,10 @@
                                     value="{{ old('account_number') }}"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ubit-purple-500"
                                     placeholder="Account number used for payment"
+                                    pattern="^\d{10,16}$"
                                     required
                                 >
+                                <p class="text-xs text-gray-500 mt-1">Enter the account number you used for the deposit (10-16 digits)</p>
                                 @error('account_number')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -167,8 +196,10 @@
                                     value="{{ old('transaction_id') }}"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ubit-purple-500"
                                     placeholder="Transaction ID from your bank"
+                                    pattern="^[A-Za-z0-9]{8,20}$"
                                     required
                                 >
+                                <p class="text-xs text-gray-500 mt-1">Enter the transaction ID/reference number from your bank receipt (8-20 alphanumeric characters)</p>
                                 @error('transaction_id')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -248,6 +279,43 @@
                     <p class="text-xs text-gray-500 mt-1">Click to change file</p>
                 `;
             }
+        });
+
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('92')) {
+                value = '+' + value;
+            } else if (value.startsWith('0')) {
+                value = '+92' + value.substring(1);
+            } else if (value.length > 0 && !value.startsWith('+92')) {
+                value = '+92' + value;
+            }
+            // Remove any spaces and limit to 13 characters (+92 + 10 digits)
+            value = value.replace(/\s/g, '').substring(0, 13);
+            e.target.value = value;
+        });
+
+        // CNIC formatting
+        document.getElementById('cnic').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5);
+            }
+            if (value.length >= 13) {
+                value = value.substring(0, 13) + '-' + value.substring(13);
+            }
+            e.target.value = value.substring(0, 15);
+        });
+
+        // Account number formatting (numbers only)
+        document.getElementById('account_number').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // Transaction ID formatting (alphanumeric only)
+        document.getElementById('transaction_id').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
         });
     </script>
 </x-app-layout> 

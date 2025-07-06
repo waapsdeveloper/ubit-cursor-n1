@@ -166,7 +166,7 @@
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Proof</h3>
                     <div class="bg-gray-50 rounded-lg p-4">
-                        <a href="{{ Storage::url($application->payment_proof) }}" target="_blank" class="text-ubit-purple-600 hover:text-ubit-purple-500 font-medium">
+                        <a href="{{ $application->payment_proof_url }}" target="_blank" class="text-ubit-purple-600 hover:text-ubit-purple-500 font-medium">
                             View Payment Proof →
                         </a>
                     </div>

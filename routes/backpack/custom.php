@@ -28,6 +28,12 @@ Route::group([
     Route::get('bidder-application/{id}/verify-payment', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'verifyPayment'])->name('backpack.bidder-application.verify-payment');
     Route::get('bidder-application/{id}/send-invitation', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'sendInvitation'])->name('backpack.bidder-application.send-invitation');
     Route::get('bidder-application/{id}/approve', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'approve'])->name('backpack.bidder-application.approve');
+    Route::get('bidder-application/{id}/reject', [\App\Http\Controllers\Admin\BidderApplicationCrudController::class, 'reject'])->name('backpack.bidder-application.reject');
+
+    // Settings routes
+    Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+    Route::get('settings/statistics', [\App\Http\Controllers\Admin\SettingsController::class, 'statistics'])->name('admin.settings.statistics');
 
 }); // this should be the absolute last line of this file
 

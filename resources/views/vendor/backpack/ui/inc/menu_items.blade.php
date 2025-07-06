@@ -10,3 +10,4 @@
 <x-backpack::menu-item title="Invitation crud controllers" icon="la la-question" :link="backpack_url('invitation-crud-controller')" />
 <x-backpack::menu-item title="Invitations" icon="la la-question" :link="backpack_url('invitation')" />
 <x-backpack::menu-item title="Bidder Applications" icon="la la-user-plus" :link="backpack_url('bidder-application')" />
+<x-backpack::menu-item title="Settings" icon="la la-cog" :link="backpack_url('settings')" />
