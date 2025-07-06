@@ -19,6 +19,11 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        @if(auth()->user()->role !== 'bidder')
+                        <x-nav-link :href="route('bidder.application.show')" :active="request()->routeIs('bidder.application.*')">
+                            {{ __('Become a Bidder') }}
+                        </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>
@@ -90,6 +95,11 @@
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
+                @if(auth()->user()->role !== 'bidder')
+                <x-responsive-nav-link :href="route('bidder.application.show')" :active="request()->routeIs('bidder.application.*')">
+                    {{ __('Become a Bidder') }}
+                </x-responsive-nav-link>
+                @endif
             @endauth
         </div>
 

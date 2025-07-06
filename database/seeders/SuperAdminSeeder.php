@@ -16,23 +16,8 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create or get the super admin role
-        $role = Role::firstOrCreate(['name' => 'super-admin']);
-
-        // Create all permissions if they don't exist
-        $permissions = Permission::all();
-        if ($permissions->isEmpty()) {
-            $defaultPermissions = [
-                'manage users', 'manage auctions', 'manage bids', 'manage wallets', 'manage invites', 'view admin', 'edit settings',
-            ];
-            foreach ($defaultPermissions as $perm) {
-                Permission::firstOrCreate(['name' => $perm]);
-            }
-            $permissions = Permission::all();
-        }
-
-        // Assign all permissions to the super admin role
-        $role->syncPermissions($permissions);
+        // Get the super admin role (created by RolePermissionSeeder)
+        $role = Role::where('name', 'super-admin')->first();
 
         // Create the super admin user
         $user = User::firstOrCreate(

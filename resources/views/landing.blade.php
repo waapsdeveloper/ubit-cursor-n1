@@ -5,7 +5,7 @@
         subtitle="Bid on premium properties at Sahil e Firdaus. <span class='font-semibold text-white'>Invitation-only. Transparent. Secure. Fast.</span>"
         background-image="{{ asset('images/demo/housebg1.jpg') }}"
         cta-text="View Auctions"
-        cta-link="#auctions"
+        cta-link="{{ route('auctions.list') }}"
         secondary-cta-text="Get Invitation"
         secondary-cta-link="#register"
         :features="['Secure Bidding Platform', 'Real-time Updates']"

@@ -7,3 +7,6 @@
 <x-backpack::menu-item title="Wallets" icon="la la-question" :link="backpack_url('wallet')" />
 <x-backpack::menu-item title="Invites" icon="la la-question" :link="backpack_url('invite')" />
 <x-backpack::menu-item title="Auctiontimersettings" icon="la la-question" :link="backpack_url('auctiontimersetting')" />
+<x-backpack::menu-item title="Invitation crud controllers" icon="la la-question" :link="backpack_url('invitation-crud-controller')" />
+<x-backpack::menu-item title="Invitations" icon="la la-question" :link="backpack_url('invitation')" />
+<x-backpack::menu-item title="Bidder Applications" icon="la la-user-plus" :link="backpack_url('bidder-application')" />

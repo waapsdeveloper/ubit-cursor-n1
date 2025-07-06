@@ -119,6 +119,12 @@ class AuctionController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
         }
 
+        // Check if user has bidder role
+        if (!$user->isBidder()) {
+            return redirect()->route('bidder.application.show')
+                ->with('error', 'You need to become a bidder to place bids. Please complete the application process.');
+        }
+
         if ($user->id === $auction->created_by) {
             return redirect()->route('auction.bid', $id)
                 ->with('error', 'You cannot bid on your own auction.');

@@ -69,6 +69,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a regular user.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    /**
      * Get the auctions created by the user (admin).
      */
     public function auctions()
@@ -82,6 +90,11 @@ class User extends Authenticatable
     public function bids()
     {
         return $this->hasMany(Bid::class);
+    }
+
+    public function bidderApplication()
+    {
+        return $this->hasOne(BidderApplication::class);
     }
 
     /**
