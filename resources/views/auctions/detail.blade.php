@@ -6,7 +6,7 @@
                 <ol class="flex items-center space-x-2 text-sm text-gray-600">
                     <li><a href="{{ route('landing') }}" class="hover:text-ubit-purple-500">Home</a></li>
                     <li><span class="mx-2">/</span></li>
-                    <li><a href="#" class="hover:text-ubit-purple-500">Auctions</a></li>
+                    <li><a href="{{ route('auctions.list') }}" class="hover:text-ubit-purple-500">Auctions</a></li>
                     <li><span class="mx-2">/</span></li>
                     <li class="text-gray-900">{{ $auction->title }}</li>
                 </ol>
