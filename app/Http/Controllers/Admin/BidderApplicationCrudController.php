@@ -151,9 +151,13 @@ class BidderApplicationCrudController extends CrudController
         $application = BidderApplication::findOrFail($id);
         
         if ($application->status === 'pending') {
+            // Update user role to bidder when payment is verified
+            $application->user->update(['role' => 'bidder']);
+            
+            // Mark payment as verified
             $application->markPaymentVerified(Auth::id());
             
-            \Alert::success('Payment verified successfully!')->flash();
+            \Alert::success('Payment verified successfully! User is now a bidder.')->flash();
         } else {
             \Alert::error('Application is not in pending status.')->flash();
         }
@@ -211,13 +215,10 @@ class BidderApplicationCrudController extends CrudController
         $application = BidderApplication::findOrFail($id);
         
         if ($application->status === 'invitation_sent') {
-            // Update user role to bidder
-            $application->user->update(['role' => 'bidder']);
-            
             // Mark application as approved
             $application->markApproved();
             
-            \Alert::success('Application approved! User is now a bidder.')->flash();
+            \Alert::success('Application approved successfully!')->flash();
         } else {
             \Alert::error('Application must have invitation sent first.')->flash();
         }
