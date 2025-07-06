@@ -24,18 +24,24 @@
                         @foreach($auctions as $auction)
                             {
                                 title: @json($auction->title),
-                                img: @json($auction->image ?? "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"),
+                                img: @json($auction->image ?? asset('images/demo/properties/pr-1.png')),
                                 location: @json($auction->location),
                                 price: "PKR {{ number_format($auction->starting_bid, 0) }}"
                             }@if(!$loop->last),@endif
                         @endforeach
                         @if($auctions->isEmpty())
-                            { title: ' Luxury Villa', img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80' , location: 'Sahil e Firdaus' , price: 'PKR 50,000,000' },
-                    { title: 'Modern Apartment' , img: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=600&q=80' , location: 'Sahil e Firdaus' , price: 'PKR 18,000,000' },
-                    { title: 'Beachfront Plot' , img: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80' , location: 'Sahil e Firdaus' , price: 'PKR 30,000,000' }
-                    @endif
+                            { title: 'Luxury Villa with Ocean View', img: '{{ asset("images/demo/properties/pr-1.png") }}', location: 'Sahil e Firdaus - Beachfront', price: 'PKR 25,000,000' },
+                            { title: 'Modern Downtown Apartment', img: '{{ asset("images/demo/properties/pr-2.png") }}', location: 'Sahil e Firdaus - Downtown', price: 'PKR 18,000,000' },
+                            { title: 'Beachfront Penthouse Suite', img: '{{ asset("images/demo/properties/pr-3.png") }}', location: 'Sahil e Firdaus - Ocean Drive', price: 'PKR 35,000,000' },
+                            { title: 'Garden Villa with Pool', img: '{{ asset("images/demo/properties/pr-4.png") }}', location: 'Sahil e Firdaus - Garden District', price: 'PKR 22,000,000' },
+                            { title: 'Executive Townhouse', img: '{{ asset("images/demo/properties/pr-5.png") }}', location: 'Sahil e Firdaus - Executive Heights', price: 'PKR 28,000,000' },
+                            { title: 'Waterfront Luxury Home', img: '{{ asset("images/demo/properties/pr-6.png") }}', location: 'Sahil e Firdaus - Waterfront', price: 'PKR 42,000,000' },
+                            { title: 'Mountain View Estate', img: '{{ asset("images/demo/properties/pr-7.png") }}', location: 'Sahil e Firdaus - Mountain View', price: 'PKR 38,000,000' },
+                            { title: 'Urban Loft Apartment', img: '{{ asset("images/demo/properties/pr-8.png") }}', location: 'Sahil e Firdaus - Urban Center', price: 'PKR 15,000,000' },
+                            { title: 'Seaside Villa Complex', img: '{{ asset("images/demo/properties/pr-9.png") }}', location: 'Sahil e Firdaus - Coastal Resort', price: 'PKR 45,000,000' }
+                        @endif
                     ]
-                    }' class="max-w-3xl mx-auto">
+                }' class="max-w-3xl mx-auto">
                     <div class="overflow-hidden rounded-xl shadow-lg">
                         <template x-for="(item, idx) in items" :key="idx">
                             <div x-show="active === idx" class="transition-all duration-500">

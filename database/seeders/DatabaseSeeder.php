@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\Wallet;
 use App\Models\Invite;
@@ -25,11 +24,11 @@ class DatabaseSeeder extends Seeder
         $admins->each(fn($admin) => Wallet::factory()->create(['user_id' => $admin->id]));
         $bidders->each(fn($bidder) => Wallet::factory()->create(['user_id' => $bidder->id]));
 
-        // Create 10 auctions, each by a random admin
-        $auctions = Auction::factory(10)->make()->each(function ($auction) use ($admins) {
-            $auction->created_by = $admins->random()->id;
-            $auction->save();
-        });
+        // Seed auctions with actual property images
+        $this->call(AuctionSeeder::class);
+
+        // Get the created auctions for bidding
+        $auctions = \App\Models\Auction::all();
 
         // Create 50 bids, each by a random bidder on a random auction
         foreach (range(1, 50) as $i) {
