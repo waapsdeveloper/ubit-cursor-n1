@@ -12,57 +12,13 @@
         badge-text="🏆 Premium Real Estate"
     />
 
-    <!-- Slider Section -->
-    <section id="auctions" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center text-ubit-purple-500">Featured Properties in Auction</h2>
-            <div class="relative">
-                <!-- Dynamic slider using Alpine.js and Blade -->
-                <div x-data='{
-                    active: 0,
-                    items: [
-                        @foreach($auctions as $auction)
-                            {
-                                title: @json($auction->title),
-                                img: @json($auction->image ?? asset('images/demo/properties/pr-1.png')),
-                                location: @json($auction->location),
-                                price: "PKR {{ number_format($auction->starting_bid, 0) }}"
-                            }@if(!$loop->last),@endif
-                        @endforeach
-                        @if($auctions->isEmpty())
-                            { title: 'Luxury Villa with Ocean View', img: '{{ asset("images/demo/properties/pr-1.png") }}', location: 'Sahil e Firdaus - Beachfront', price: 'PKR 25,000,000' },
-                            { title: 'Modern Downtown Apartment', img: '{{ asset("images/demo/properties/pr-2.png") }}', location: 'Sahil e Firdaus - Downtown', price: 'PKR 18,000,000' },
-                            { title: 'Beachfront Penthouse Suite', img: '{{ asset("images/demo/properties/pr-3.png") }}', location: 'Sahil e Firdaus - Ocean Drive', price: 'PKR 35,000,000' },
-                            { title: 'Garden Villa with Pool', img: '{{ asset("images/demo/properties/pr-4.png") }}', location: 'Sahil e Firdaus - Garden District', price: 'PKR 22,000,000' },
-                            { title: 'Executive Townhouse', img: '{{ asset("images/demo/properties/pr-5.png") }}', location: 'Sahil e Firdaus - Executive Heights', price: 'PKR 28,000,000' },
-                            { title: 'Waterfront Luxury Home', img: '{{ asset("images/demo/properties/pr-6.png") }}', location: 'Sahil e Firdaus - Waterfront', price: 'PKR 42,000,000' },
-                            { title: 'Mountain View Estate', img: '{{ asset("images/demo/properties/pr-7.png") }}', location: 'Sahil e Firdaus - Mountain View', price: 'PKR 38,000,000' },
-                            { title: 'Urban Loft Apartment', img: '{{ asset("images/demo/properties/pr-8.png") }}', location: 'Sahil e Firdaus - Urban Center', price: 'PKR 15,000,000' },
-                            { title: 'Seaside Villa Complex', img: '{{ asset("images/demo/properties/pr-9.png") }}', location: 'Sahil e Firdaus - Coastal Resort', price: 'PKR 45,000,000' }
-                        @endif
-                    ]
-                }' class="max-w-3xl mx-auto">
-                    <div class="overflow-hidden rounded-xl shadow-lg">
-                        <template x-for="(item, idx) in items" :key="idx">
-                            <div x-show="active === idx" class="transition-all duration-500">
-                                <img :src="item.img" :alt="item.title" class="w-full h-64 object-cover">
-                                <div class="p-6 bg-white">
-                                    <h3 class="text-xl font-bold text-gray-900" x-text="item.title"></h3>
-                                    <p class="text-gray-700" x-text="item.location"></p>
-                                    <p class="text-ubit-purple-500 font-semibold mt-2" x-text="item.price"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    <div class="flex justify-center mt-4 space-x-2">
-                        <template x-for="(item, idx) in items" :key="idx">
-                            <button @click="active = idx" :class="{'bg-ubit-purple-500': active === idx, 'bg-gray-300': active !== idx}" class="w-3 h-3 rounded-full transition"></button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Featured Properties Section -->
+    <x-featured-properties 
+        title="Featured Properties in Auction"
+        subtitle="Discover exclusive properties available for bidding at Sahil e Firdaus"
+        :show-view-all="true"
+        :limit="6"
+    />
 
     <!-- How It Works Section -->
     <section id="how" class="py-16" style="background-color: #F8F7FF;">

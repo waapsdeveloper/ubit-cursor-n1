@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
 
         // Seed auctions with actual property images
         $this->call(AuctionSeeder::class);
+        
+        // Seed timer settings for auctions
+        $this->call(AuctionTimerSettingsSeeder::class);
 
         // Get the created auctions for bidding
         $auctions = \App\Models\Auction::all();
