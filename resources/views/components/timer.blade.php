@@ -17,103 +17,69 @@
 
 <div 
     id="{{ $timerId }}"
-    x-data="auctionTimer({
-        endTime: '{{ $auction->end_time }}',
-        config: @js($config),
-        initialTime: @js($timeRemaining)
-    })"
-    x-init="init()"
     class="auction-timer"
+    title="Timer for {{ $auction->title }}"
+    style="border: 2px solid red; min-height: 30px;"
+    data-end-time="{{ $auction->end_time }}"
 >
-    <!-- Timer Display -->
-    <div x-show="!isExpired" class="timer-display">
-        <!-- Compact Style -->
-        <div x-show="config.style === 'compact'" class="timer-compact" :class="'timer-compact-' + config.color">
-            <div class="flex items-center justify-center space-x-1">
-                <template x-if="config.showDays && timeRemaining.days > 0">
-                    <div class="flex items-center">
-                        <span class="text-sm font-bold" x-text="timeRemaining.days"></span>
-                        <span class="text-xs ml-1">d</span>
-                    </div>
-                </template>
-                <template x-if="config.showHours">
-                    <div class="flex items-center">
-                        <span class="text-sm font-bold" x-text="String(timeRemaining.hours).padStart(2, '0')"></span>
-                        <span class="text-xs ml-1">h</span>
-                    </div>
-                </template>
-                <template x-if="config.showMinutes">
-                    <div class="flex items-center">
-                        <span class="text-sm font-bold" x-text="String(timeRemaining.minutes).padStart(2, '0')"></span>
-                        <span class="text-xs ml-1">m</span>
-                    </div>
-                </template>
-                <template x-if="config.showSeconds">
-                    <div class="flex items-center">
-                        <span class="text-sm font-bold" x-text="String(timeRemaining.seconds).padStart(2, '0')"></span>
-                        <span class="text-xs ml-1">s</span>
-                    </div>
-                </template>
-            </div>
-        </div>
-
-        <!-- Detailed Style -->
-        <div x-show="config.style === 'detailed'" class="timer-detailed">
-            <div class="grid grid-cols-4 gap-2">
-                <template x-if="config.showDays">
-                    <div class="text-center">
-                        <div class="text-lg font-bold" x-text="timeRemaining.days"></div>
-                        <div class="text-xs text-gray-500">Days</div>
-                    </div>
-                </template>
-                <template x-if="config.showHours">
-                    <div class="text-center">
-                        <div class="text-lg font-bold" x-text="String(timeRemaining.hours).padStart(2, '0')"></div>
-                        <div class="text-xs text-gray-500">Hours</div>
-                    </div>
-                </template>
-                <template x-if="config.showMinutes">
-                    <div class="text-center">
-                        <div class="text-lg font-bold" x-text="String(timeRemaining.minutes).padStart(2, '0')"></div>
-                        <div class="text-xs text-gray-500">Minutes</div>
-                    </div>
-                </template>
-                <template x-if="config.showSeconds">
-                    <div class="text-center">
-                        <div class="text-lg font-bold" x-text="String(timeRemaining.seconds).padStart(2, '0')"></div>
-                        <div class="text-xs text-gray-500">Seconds</div>
-                    </div>
-                </template>
-            </div>
-        </div>
-
-        <!-- Minimal Style -->
-        <div x-show="config.style === 'minimal'" class="timer-minimal">
-            <span class="text-sm font-medium" x-text="formatMinimalTime()"></span>
+    <!-- Static Timer Display -->
+    <div class="timer-compact timer-compact-orange">
+        <div class="flex items-center justify-center space-x-1 text-sm font-bold">
+            <span id="timer-{{ $auction->id }}">{{ $timeRemaining['days'] }}d {{ $timeRemaining['hours'] }}h {{ $timeRemaining['minutes'] }}m {{ $timeRemaining['seconds'] }}s</span>
         </div>
     </div>
+</div>
 
-    <!-- Expired Message -->
-    <div x-show="isExpired" class="timer-expired">
-        <span class="text-sm font-medium text-red-600" x-text="config.expiredMessage"></span>
-    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timerElement = document.getElementById('timer-{{ $auction->id }}');
+    const endTime = new Date('{{ $auction->end_time }}');
+    
+    function updateTimer() {
+        const now = new Date();
+        const diff = endTime - now;
+        
+        if (diff <= 0) {
+            timerElement.textContent = 'Auction Ended';
+            return;
+        }
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        let timeString = '';
+        if (days > 0) timeString += days + 'd ';
+        timeString += String(hours).padStart(2, '0') + 'h ';
+        timeString += String(minutes).padStart(2, '0') + 'm ';
+        timeString += String(seconds).padStart(2, '0') + 's';
+        
+        timerElement.textContent = timeString;
+    }
+    
+    // Update immediately
+    updateTimer();
+    
+    // Update every second
+    setInterval(updateTimer, 1000);
+});
+</script>
 
-    <!-- Warning Indicator -->
-    <div 
-        x-show="config.showWarning && showWarning && !isExpired" 
-        class="timer-warning mt-1"
-    >
-        <span class="text-xs text-red-500 font-medium">⚠️ Ending Soon!</span>
-    </div>
+
+
+
 </div>
 
 <style>
 .auction-timer {
     font-family: 'Inter', sans-serif;
+    min-width: 80px;
+    display: inline-block;
 }
 
 .timer-compact {
-    @apply bg-gray-100 px-3 py-1 rounded-lg;
+    @apply bg-white px-3 py-2 rounded-lg shadow-lg min-w-max border border-gray-200;
 }
 
 .timer-detailed {

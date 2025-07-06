@@ -6,8 +6,8 @@ function auctionTimer(config) {
     return {
         endTime: config.endTime,
         config: config.config,
-        timeRemaining: config.initialTime,
-        isExpired: config.initialTime.is_expired,
+        timeRemaining: config.initialTime || { days: 0, hours: 0, minutes: 0, seconds: 0 },
+        isExpired: config.initialTime?.is_expired || false,
         showWarning: false,
         timerInterval: null,
 

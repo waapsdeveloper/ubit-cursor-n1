@@ -14,7 +14,7 @@
                 <!-- Property Card -->
                 <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100">
                     <!-- Property Image -->
-                    <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <div class="relative h-48 overflow-hidden bg-gray-100 relative">
                         <img 
                             src="{{ asset($property->image) }}" 
                             alt="{{ $property->title }}"
@@ -28,7 +28,7 @@
                             </span>
                         </div>
                         <!-- Timer -->
-                        <div class="absolute top-4 right-4">
+                        <div class="absolute top-4 right-4 z-10">
                             <x-timer :auction="$property" />
                         </div>
                     </div>
